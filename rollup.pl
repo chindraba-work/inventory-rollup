@@ -9,7 +9,7 @@ my $driver = 'mysql';
 my $database = 'INVENTORY_USAGE';
 my $dsn = "DBI:$driver:database=$database;mysql_client_found_rows=1;mysql_server_prepare=1";
 my $user = 'inventory';
-my $pass = 'viasat';
+my $pass = '';
 
 my $dbh = DBI->connect( $dsn, $user, $pass, {RaiseError => 1} )
     || die "Error connecting to DB: ".$DBI::errstr;

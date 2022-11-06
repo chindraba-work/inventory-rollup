@@ -7,8 +7,6 @@
 - [Version Numbers](#version-numbers)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Synopsis](#synopsis)
-  - [Details](#command-details)
 - [Copyright and License](#copyright-and-license)
 
 
@@ -68,8 +66,6 @@ or
 
 ## Usage
 
-### Synopsis
-
 The basic usage is:
 ```
 > rollup <filename.csv>
@@ -87,21 +83,21 @@ The process is (using LibreOffice setting, Excel might be differently labeled wh
 
 1.  Export the report using the official tool
 2.  Load the report in Excel
-  a.  Make sure that the dates are displayed in` MM/DD/YYYY` or `[M]M/[D]D/[YY]YY` format
+   -  Make sure that the dates are displayed in` MM/DD/YYYY` or `[M]M/[D]D/[YY]YY` format
 3.  Save a copy in Text CSV (.csv) format
-  a.  Set the 'Field delimiter' as choosen
-  b.  Ignore the 'String delimiter' (it won't be used)
-  c.  Check 'Save cell content as shown'
-  d.  Clear 'Save cell formulas instead of calculated values'
-  e.  Clear 'Quote all text cells'  !! **Important** !!
-  f.  Clear 'Fixed column width'
+   -  Set the 'Field delimiter' as choosen
+   -  Ignore the 'String delimiter' (it won't be used)
+   -  Check 'Save cell content as shown'
+   -  Clear 'Save cell formulas instead of calculated values'
+   -  Clear 'Quote all text cells'  !! **Important** !!
+   -  Clear 'Fixed column width'
 4.  Run import against the saved `.csv` file
 5.  Repeat for each report needed (Each report can be processed in steps 1 - 4, or step 1 for all reports then step 2 for each, etc.)
 6.  Read the database, using any tool you like, to get the data needed.
-    a.  The `summary-report.sql` file is the one that works for me.
+  -  The `summary-report.sql` file is the one that works for me.
 7.  (Optional) Import the data (from the ouput command above) into Excel to sort and shuffle
-    a.  Importing the CSV from the MySql output requires changing the Excel import options so that the `TAB` is the only separator and all other options are off.
-    b.  Saving the import as an Excel file `.xls` or `.xlsx` will avoid having to import it again.
+  -  Importing the CSV from the MySql output requires changing the Excel import options so that the `TAB` is the only separator and all other options are off.
+  -  Saving the import as an Excel file `.xls` or `.xlsx` will avoid having to import it again.
 
 [TOP](#contents)
 
