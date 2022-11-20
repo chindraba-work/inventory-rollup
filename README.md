@@ -12,19 +12,23 @@
 
 ## Description
 
-A Perl script for processing an exported usage report to populate/update a database to allow viewing the data in multiple ways.
+A Bash script to automate as much as practiacally can be automated using the Perl script described below. The Bash script handles processing of the manually downloaded Excel files directly. After the Perl script has done its part the SQL script is run and the output converted to an Excel file for manual uploading.
+
+The Perl script processes an exported usage report to populate/update a database to allow viewing the data in multiple ways.
 
 Like as not this will be of value to nobody, and in time not even to myself.
 
-On Monday I'm expected to place a restocking order for my warehouse. I've no clue what usage levels exist, or have existed, leading to being clueless as to how much to order. The system software has very few reports, at my access level anyway, and only one way to view them. One report which can hold, after a few runs, all the data I think I need is able to be exported to Excel. This is a step in digesting that Excel data and placing it in a MySQL database.
+On Mondays I'm expected to place a restocking order for my warehouse. I've still limited clues what usage levels exist, and they seem highly variable, leading to being clueless as to how much to order. The system software has very few reports, at my access level anyway, and only one way to view them. One report which can hold, after a few runs, all the data I think I need is able to be exported to Excel. This is a step in digesting that Excel data and placing it in a MySQL database.
 
 [TOP](#contents)
 
 ## Requirements
 
+- Working access to a Bash shell
+- LibreOffice Calc for converting the files
 - Working install of Perl
 - Access to a MySQL/MariaDB database, including the ability to create new databases
-- Excel or any spreadsheet program able to read `.xlsx` files
+- Excel or any spreadsheet program able to read `.xlsx` files if using the old method
 - Probably a GNU/Linux system, as this has not been tried in Windows or Mac
 
 
@@ -32,7 +36,7 @@ On Monday I'm expected to place a restocking order for my warehouse. I've no clu
 
 ## Version Numbers
 
-Inventory Roller uses [Semantic Versioning v2.0.0](https://semver.org/spec/v2.0.0.html) as created by [Tom Preston-Werner](http://tom.preston-werner.com/), inventor of Gravatars and cofounder of GitHub.
+Inventory Rollup uses [Semantic Versioning v2.0.0](https://semver.org/spec/v2.0.0.html) as created by [Tom Preston-Werner](http://tom.preston-werner.com/), inventor of Gravatars and cofounder of GitHub.
 
 Version numbers take the form `X.Y.Z` where `X` is the major version, `Y` is the minor version and `Z` is the patch version. The meaning of the different levels are:
 
@@ -46,7 +50,7 @@ Version numbers take the form `X.Y.Z` where `X` is the major version, `Y` is the
 
 ## Installation
 
-Without the need to link to any system libraries, or install any, the program can be "installed" anywhere, including the user's home directory. A simple option is to make a new folder in the user's home directory and place all the files there. The `rollup.pl` file, of course, needs to be set as executable, `chmod u+x rollup.pl` for it to be used as a command.
+Without the need to link to any system libraries, or install any, the program can be "installed" anywhere, including the user's home directory. A simple option is to make a new folder in the user's home directory and place all the files there. The `rollup` and `rollup.pl` files, of course, needs to be set as executable, `chmod u+x rollup{,.pl}` for it to be used as a command.
 
 The `startup.sql` file can be executed from within the MySQL command line client, using the `source` command or directly from the shell using redirection
 
@@ -66,7 +70,15 @@ or
 
 ## Usage
 
-The basic usage is:
+### Automated method
+
+- Download the two inventory usage reports. Saving the "Track to work order" report as `to-work.xlsx` and the "Track to tech" report as `to-tech.xlsx`.
+- Run the `rollup` script from Bash, or from the file manager by clicking (double-clicking if that's your setting)
+- Copy/upload the `summary_report-YYYY.MM.DD.xlsx` file to where you need it. The `YYYY.MM.DD` suffix will be the current date in UTC, possibly 1 different than local time.
+
+Of note is that the automated method will only process one pair of reports. If more are needed, download them in pairs, and process the pair downloaded each time. The scripts are quick, and it's a one-time process only. New reports will be much smaller, only spanning 7 or 8 days, and overlapping transactions are ignored. Of course, it's also possible to download all the reports at once, using assorted names, and use the manual method to load them into the database, if you have spare time you don't know what to do with.
+
+### Manual method
 ```
 > rollup <filename.csv>
 ```
@@ -103,7 +115,11 @@ The process is (using LibreOffice setting, Excel might be differently labeled wh
 
 ## Configuration
 
-The only configuration possible is to change the separator character for fields in the `.csv` file. Use the same character when saving as `Text CSV(.csv)` in Excel and in the `rollup.pl` file at line 82.
+The only configuration change I envision as helpful is changing the file names used. All three file names can be changed in `rollup` at lines 10 - 12.
+
+Though possible, the separator character can still be changed. With the process being automated the need to change characters is very slim, unless there _is_ an inventory item or technician with `þ` in the name. (HR and the inventory creator probably couldn't type it if it _was_ part of a name anyway.)
+
+Still, it is possible is to change the separator character for fields in the `.csv` file. Use the same character when saving as `Text CSV(.csv)` in Excel and in the `rollup.pl` file at line 82. In addition, when using the `rollup` Bash script the character has to be changed at lines 18 & 19, where the current `254` is replaced with the **decimal** ASCII value for the character. My testing shows that Unicode in the range of 128 to 254 are probably valid. Values outside that range are untested, and it's up to LibreOffice how it treats them anyway.
 
 
 [TOP](#contents)

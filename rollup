@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+
+# Database access information
+dname='INVENTORY_USAGE'
+uname='inventory'
+upass='viasat'
+
+# File names
+techReport='to-tech'
+workReport='to-work'
+summaryReport='summary_report'
+
+# Final output with current date suffix
+fname="$summaryReport-$(date --utc +%Y.%m.%d)"
+
+# Convert downloaded Excel sheets to CSV
+soffice --convert-to "csv:Text - txt - csv (StarCalc):254,34,76,1,,0" "$techReport.xlsx"
+soffice --convert-to "csv:Text - txt - csv (StarCalc):254,34,76,1,,0" "$workReport.xlsx"
+
+# Add to the database
+./rollup.pl "$techReport.csv"
+./rollup.pl "$workReport.csv"
+
+# Generate the report
+mysql -u $uname -p$upass -D$dname <summary_report.sql > $fname.csv
+
+# Modify report to replace the rollup NULL values with meaningful labels
+# MySql could do this for us, MariaDB as of yet cannot.
+perl -pi -e 's/^NULL/SUM/g;s/NULL/{OFFICE}/g' $fname.csv
+
+# Convert to Excel XSLX for regular users
+soffice --headless --convert-to xlsx:"Calc MS Excel 2007 XML" --infilter="Text - txt - csv (StarCalc):9,34,76,1,1/2/2/2/3/2/4/2" $fname.csv

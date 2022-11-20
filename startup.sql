@@ -1,3 +1,4 @@
+-- SPDX-License-Identifier: MIT
 CREATE SCHEMA INVENTORY_USAGE
 
 GO

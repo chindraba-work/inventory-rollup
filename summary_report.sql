@@ -1,5 +1,6 @@
+-- SPDX-License-Identifier: MIT
 SELECT
-    DATEDIFF('2022-11-04',`InventoryIssue_Collection`.`date`) DIV 7 AS `Age`,
+    DATEDIFF(DATE(NOW()),`InventoryIssue_Collection`.`date`) DIV 7 AS `Age`,
     `Technician`.`name` AS `Tech`,
     `Item`.`name` AS `Item`,
     SUM(`quantity`) AS `Sold`
